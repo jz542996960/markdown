@@ -24,14 +24,16 @@ AnnotationBeanNameGenerator
 具体流程：
 
 1. 调用generateBeanName 方法
-  ![111](/Users/jz/Documents/develp/笔记/markdown/assets/111-3910694.png)
+     ![111](assets/111-4016133.png)
 
 2. 如果@Service注解没有设置名称,
 
-  ![WX20181128-170430](/Users/jz/Documents/develp/笔记/markdown/assets/WX20181128-170430-3910706.png)
+     ![WX20181128-170430](assets/WX20181128-170430-4016146.png)
+
+​       ![WX20181128-170702](assets/WX20181128-170702-4016159.png)
 
   
 
 ---
-#### ![WX20181128-170702](/Users/jz/Documents/develp/笔记/markdown/assets/WX20181128-170702-3910739.png)总结：
+#### 总结：
    如果在配置Bean的时候（xml，注解形式）,没有指定bean的名称。Spring会默认给Bean指定一个名称，规则为，如果Bean的类名称前两个字母大写，那么bean的类型，就是Bean的名称，如果不是，则Bean的类型首字母小写，就是Bean的name。
