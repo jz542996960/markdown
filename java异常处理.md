@@ -277,7 +277,7 @@ package com.jz.test.finallyTest;
 
 public class FinallyRetTest {
 
-    private static Integer a = new Integer(10);
+    private static Integer a = new Integer(128);
 
     public static int finallyRet(){
         try{
@@ -285,7 +285,7 @@ public class FinallyRetTest {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            a = 1;
+            a = 129;
         }
 
         return a;
@@ -294,10 +294,13 @@ public class FinallyRetTest {
     public static void main(String[] args) {
 
         System.out.println(finallyRet());
+        System.out.println("a的值为:"+ a);
+
     }
 
 }
-返回：10
+返回： 128
+a的值为129
 ```
 
 >  从结果可以看出finally中修改返回值，如果返回值是基本数据类型包括基本数据类型的包装类，则返回值不会受finally中修改的影响。如果是引用类型，则会收到finally中修改值的影响。
