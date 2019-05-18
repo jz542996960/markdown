@@ -1,3 +1,8 @@
+---
+typora-root-url: ./assets
+typora-copy-images-to: ./assets
+---
+
 ### Integer和int的比较
 #### 1. 两个new Integer比较
 > 通过new生成的Integer变量，实际内存地址不同，所有 == 永远返回false。
@@ -73,4 +78,3 @@ public class IntegerMain {
 >IntegerCache 是一个static final Integer cache[] 的数组,数据为-128 到127 之间。
 
 
- 
