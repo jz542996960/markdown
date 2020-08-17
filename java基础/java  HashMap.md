@@ -300,3 +300,93 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
 
 
 hashmap在扩容后，对应的各个node 需要重新计算位置。
+
+
+
+### 4. LinkedHashMap
+
+LinkedHashMap 继承自HashMap, 可以保证遍历顺序和插入顺序一致，内部维护了一个双向链表来保证插入的有序性。
+
+LinkedHashMap 内部为 Entry 数组，Entry 继承自HashMap的Node 类，维护了一个头指针和未指针。重写了HashMap的newNode方法，当插入元素时候，维护节点的前项指针和尾指针。
+
+LinkedHashMap的节点数据结构
+
+```java
+   
+    static class Entry<K,V> extends HashMap.Node<K,V> {
+        Entry<K,V> before, after;
+        Entry(int hash, K key, V value, Node<K,V> next) {
+            super(hash, key, value, next);
+        }
+    }
+```
+
+重写了newNode方法，newNode 是在put 时候调用的
+
+```java
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) 
+```
+
+
+
+### 5. TreeMap
+
+TreeMap 内部通过红黑树实现，红黑树结构天然支持排序，默认情况下通过Key值的自然顺序进行排序。
+
+TreeMapree中当未实现 Comparator 接口时，key 不可以为null；当实现 Comparator 接口时，若未对null情况进行判断，则key不可以为null，反之亦然。
+
+```java
+package com.jz.test;
+
+
+import java.util.Comparator;
+import java.util.TreeMap;
+
+class StuT  implements  Comparable<StuT>{
+    private String name;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    @Override
+    public int compareTo(StuT o) {
+        if(null == this){
+            return 0;
+        }
+        if(o == null){
+            return 1;
+        }
+        return name.compareTo(o.getName());
+    }
+}
+public class TreeMapTest {
+    public static void main(String[] args) {
+        Comparator<StuT> comparator =(s1,s2)->{
+            //注释掉后 回报空指针异常
+            if(null == s1 || null == s2){
+                return 1;
+            }
+            return s1.getName().compareTo(s2.getName());
+        };
+        TreeMap treeMap = new TreeMap(comparator);
+        StuT stu = new StuT();
+        stu.setName("11");
+        treeMap.put(stu,1);
+
+        StuT stu1 = new StuT();
+        stu1.setName("22");
+        treeMap.put(stu1,2);
+
+        treeMap.put(null,3);
+
+        System.out.println(treeMap);
+
+    }
+
+    //输出结果 {com.jz.test.StuT@5387f9e0=1, com.jz.test.StuT@6e5e91e4=2, null=3}
+
+}
+```
+
