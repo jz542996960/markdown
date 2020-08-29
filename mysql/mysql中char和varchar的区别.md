@@ -136,7 +136,7 @@ varchar：可变长字符串
   ```javascript
   	SELECT concat("'",varchar_test,"'") FROM test;
   	SELECT concat("'",char_test,"'") FROM test;
-  12
+  
   ```
 
 ![lchh](assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzA1NDM5Nw==,size_16,color_FFFFFF,t_70.png)
