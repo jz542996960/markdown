@@ -1,4 +1,6 @@
-## HashMap 源码分析
+## jdk1.7  HashMap 源码分析
+
+## 构造方法
 
 1. 调用无参构造函数，构造一个HashMap
 
@@ -32,7 +34,7 @@ void init() {
 
 ```
 
-2.  调用put 方法
+## 2.调用put 方法
 
 ```java
     public V put(K key, V value) {
@@ -196,4 +198,148 @@ private V putForNullKey(V value) {
 
 ```
 
-   计算 下标是通过   hash值 和 数组长度减一 进行与运算 计算出的，目的是为了把数据分配的更均匀
+   计算 下标是通过   hash值 和 （数组长度减一） 进行与运算 计算出的，目的是为了把数据分配的更均匀。 
+
+  比如 默认的数组长度为 16  二进制位 0001 0000
+
+ 16-1 = 15  ， 15 的二进制位 0000 11111
+
+ hash值为  
+
+ hash  &  0000 1111 的结果是否离散，就取决于hash值是否离散。
+
+
+
+2.6  void addEntry(int hash, K key, V value, int bucketIndex)   如果hashmap里不存在相同的元素，就需要把元素放到数组或者链表里
+
+```java
+ void addEntry(int hash, K key, V value, int bucketIndex) {
+        //判断是否需要扩容。扩容的条件是map数组的元素总数大于等于扩容阈值，数组的index位置的元素不为null
+        if ((size >= threshold) && (null != table[bucketIndex])) {
+            resize(2 * table.length);
+            hash = (null != key) ? hash(key) : 0;
+            bucketIndex = indexFor(hash, table.length);
+        }
+        // 构造entry 并且维护链表关系
+        createEntry(hash, key, value, bucketIndex);
+    }
+```
+
+
+
+ 先看createEntry方法，
+
+```java
+// 基于头插法构造链表  
+void createEntry(int hash, K key, V value, int bucketIndex) {
+        Entry<K,V> e = table[bucketIndex];
+        table[bucketIndex] = new Entry<>(hash, key, value, e);
+        //增加hashmap元素的数量
+        size++;
+    }
+
+     Entry(int h, K k, V v, Entry<K,V> n) {
+            value = v;
+            next = n;
+            key = k;
+            hash = h;
+        }
+
+```
+
+
+
+![image-20200831165827094](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831165827094.png)
+
+加入bucketIndex = 2， 那么此时e = table[bucketIndex]  指向链表的头结点,对应Entry(3,4).
+
+ new Entry<>(hash, key, value, e);  构造一个新的entry 存放新的key，并把next指向e，此时链表变为
+
+​                                                                ![image-20200831170108121](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831170108121.png)
+
+把构造的新的entry ，赋值给链表的头结点，也就是数据的index 位置的元素，此时链表变为
+
+​                                              ![image-20200831170317762](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831170317762.png)
+
+   
+
+##  HashMap 扩容
+
+   当hashmap中的元素数量超过阈值，并且要方入得index位置的数组元素不为null 时候，会触发扩容，扩容时候回重新计算元素要存放的位置，目的是减少链表的长度，提高查询效率。
+
+```java
+    void addEntry(int hash, K key, V value, int bucketIndex) {]
+        
+        if ((size >= threshold) && (null != table[bucketIndex])) {
+            //扩容，长度为原来的二倍
+            resize(2 * table.length);
+            hash = (null != key) ? hash(key) : 0;
+            //计算新元素的下标
+            bucketIndex = indexFor(hash, table.length);
+        }
+
+        createEntry(hash, key, value, bucketIndex);
+    }
+
+```
+
+
+
+```java
+
+  void resize(int newCapacity) {
+        // 保存老的table 的引用
+        Entry[] oldTable = table;
+        // 老table的长度如果已经最大值，那么不在扩容
+        int oldCapacity = oldTable.length;
+        if (oldCapacity == MAXIMUM_CAPACITY) {
+            threshold = Integer.MAX_VALUE;
+            return;
+        }
+        // 构造长度为原来二倍的数组
+        Entry[] newTable = new Entry[newCapacity];
+        //重新计算各个元素在新的数组中存放的位置
+        transfer(newTable, initHashSeedAsNeeded(newCapacity));
+        // table 指向新的数组
+        table = newTable;
+        // 计算新的扩容阈值
+        threshold = (int)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + 1);
+    }
+```
+
+
+  主要看transfer 方法。
+
+  ```java
+    void transfer(Entry[] newTable, boolean rehash) {
+        int newCapacity = newTable.length;
+        // 遍历数组的元素
+        for (Entry<K,V> e : table) {
+            //遍历链表
+            while(null != e) {
+                Entry<K,V> next = e.next;
+                if (rehash) {
+                    e.hash = null == e.key ? 0 : hash(e.key);
+                }
+                //根据新的长度重新计算index
+                int i = indexFor(e.hash, newCapacity);
+                //头插法，讲引用方到正确的位置
+                e.next = newTable[i];
+                newTable[i] = e;
+                e = next;
+            }
+        }
+    }
+  ```
+
+ 其实 newTable[i] = null， e.next = newTable[i] 都指向了null![image-20200831173543725](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831173543725.png)
+
+  
+
+  newTable[i] = e ,   e = next;后，newTable[i]指向了e
+
+![image-20200831173827363](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831173827363.png)
+
+下一次循环如果 Entry[3,4]，也放在index 为3 的位置，那么
+
+![image-20200831174001511](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831174001511.png)
