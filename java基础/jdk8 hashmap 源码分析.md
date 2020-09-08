@@ -298,7 +298,7 @@ final Node<K,V>[] resize() {
 
 
 
-![image-20200908093833541](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200908093833541.png)
+![image-20200908093833541](assets/image-20200908093833541.png)
 
 
 
@@ -311,8 +311,9 @@ final Node<K,V>[] resize() {
 
 
 
-![image-20200908094103506](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200908094103506.png)
+![image-20200908094103506](assets/image-20200908094103506.png)
 
 
 
 因数组的库容是2的倍数扩容，切元素的下标位置计算是通过 hash & *（len-1）计算的，所以元素在扩容后的数组存放的位置只有两个一个是原来的位置，一个是原来的位置加上老数组长度的位置。
+

@@ -249,17 +249,17 @@ void createEntry(int hash, K key, V value, int bucketIndex) {
 
 
 
-![image-20200831165827094](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831165827094.png)
+![image-20200831165827094](assets/image-20200831165827094.png)
 
 加入bucketIndex = 2， 那么此时e = table[bucketIndex]  指向链表的头结点,对应Entry(3,4).
 
  new Entry<>(hash, key, value, e);  构造一个新的entry 存放新的key，并把next指向e，此时链表变为
 
-​                                                                ![image-20200831170108121](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831170108121.png)
+​                                                                ![image-20200831170108121](assets/image-20200831170108121.png)
 
 把构造的新的entry ，赋值给链表的头结点，也就是数据的index 位置的元素，此时链表变为
 
-​                                              ![image-20200831170317762](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831170317762.png)
+​                                              ![image-20200831170317762](assets/image-20200831170317762.png)
 
    
 
@@ -332,14 +332,14 @@ void createEntry(int hash, K key, V value, int bucketIndex) {
     }
   ```
 
- 其实 newTable[i] = null， e.next = newTable[i] 都指向了null![image-20200831173543725](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831173543725.png)
+ 其实 newTable[i] = null， e.next = newTable[i] 都指向了null![image-20200831173543725](assets/image-20200831173543725.png)
 
   
 
   newTable[i] = e ,   e = next;后，newTable[i]指向了e
 
-![image-20200831173827363](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831173827363.png)
+![image-20200831173827363](assets/image-20200831173827363.png)
 
 下一次循环如果 Entry[3,4]，也放在index 为3 的位置，那么
 
-![image-20200831174001511](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200831174001511.png)
+![image-20200831174001511](assets/image-20200831174001511.png)
