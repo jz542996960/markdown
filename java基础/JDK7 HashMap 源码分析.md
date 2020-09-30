@@ -166,7 +166,7 @@ private V putForNullKey(V value) {
 
 
 
-2.4   计算key的hash值后进行左移和^(相同为1，不同为0)，是为了把key的hashcode的高位移动到低位，是高位也参数到index的计算，使得hash值 更散列，最终计算出的index 也更散列
+2.4   计算key的hash值后进行左移和^(相同为1，不同为0)，是为了把key的hashcode的高位移动到低位，让高位也参数到index的计算，使得hash值 更散列，最终计算出的index 也更散列
 
 ```java
  final int hash(Object k) {
@@ -251,7 +251,7 @@ void createEntry(int hash, K key, V value, int bucketIndex) {
 
 ![image-20200831165827094](assets/image-20200831165827094.png)
 
-加入bucketIndex = 2， 那么此时e = table[bucketIndex]  指向链表的头结点,对应Entry(3,4).
+假如bucketIndex = 2， 那么此时e = table[bucketIndex]  指向链表的头结点,对应Entry(3,4).
 
  new Entry<>(hash, key, value, e);  构造一个新的entry 存放新的key，并把next指向e，此时链表变为
 
@@ -265,7 +265,7 @@ void createEntry(int hash, K key, V value, int bucketIndex) {
 
 ##  HashMap 扩容
 
-   当hashmap中的元素数量超过阈值，并且要方入得index位置的数组元素不为null 时候，会触发扩容，扩容时候回重新计算元素要存放的位置，目的是减少链表的长度，提高查询效率。
+   当hashmap中的元素数量超过阈值，并且要放入的index位置的数组元素不为null 时候，会触发扩容，扩容时候会重新计算元素在新的数组中需要存放的位置，目的是减少链表的长度，提高查询效率。
 
 ```java
     void addEntry(int hash, K key, V value, int bucketIndex) {]
@@ -283,7 +283,7 @@ void createEntry(int hash, K key, V value, int bucketIndex) {
 
 ```
 
-
+resize方法：
 
 ```java
 
